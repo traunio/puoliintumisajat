@@ -1,15 +1,14 @@
-from flask import Flask, request, session, g, redirect, url_for, \
-    abort, render_template, flash, jsonify
+from flask import Flask, request, g, url_for, \
+    render_template, Blueprint
 import jinja2
 import sqlite3
 
-DATABASE = 'static/atoms.db'
+DATABASE = 'puoliintumisajat/static/atoms.db'
 
-DEBUG = False
+print(__name__)
 
-app = Flask(__name__)
-app.config.from_object(__name__)
-app.config.from_envvar('FLASKR_SETTINGS', silent=True)
+decay_webapp = Blueprint('decay_webapp', __name__, template_folder='templates/atoms',
+                         static_folder='static/atoms')
 
 # Database connection
 def get_db():
@@ -18,14 +17,8 @@ def get_db():
         db = g._database = sqlite3.connect(DATABASE)
     return db
 
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
-
-@app.route('/')
-@app.route('/index.html')
+@decay_webapp.route('/')
+@decay_webapp.route('/index.html')
 def index():
 
 
@@ -40,7 +33,7 @@ def index():
     return render_template('index.html', atoms=rows)
 
 
-@app.route('/<int:number_z>-<string:atom>-<int:number_a>')
+@decay_webapp.route('/<int:number_z>-<string:atom>-<int:number_a>')
 def atom_full(number_z, atom, number_a):
     q_element = upper_first(atom)
 
@@ -51,7 +44,7 @@ def atom_full(number_z, atom, number_a):
                          'where atoms.element = ? and mass = ? '
                          'and protons = ?', (q_element, number_a, number_z), search)
 
-@app.route('/<int:number>-<int:number2>')
+@decay_webapp.route('/<int:number>-<int:number2>')
 def atom_between(number, number2):
     if number2 < number:
         temp = number2
@@ -65,8 +58,8 @@ def atom_between(number, number2):
                          'where mass between ? and ?', (number,number2), search)
 
 
-@app.route('/<int:number>-<string:atom>')
-@app.route('/<string:atom>-<int:number>')
+@decay_webapp.route('/<int:number>-<string:atom>')
+@decay_webapp.route('/<string:atom>-<int:number>')
 def atom_partial(number, atom):
     q_element = upper_first(atom)
 
@@ -79,7 +72,7 @@ def atom_partial(number, atom):
 
 
 
-@app.route('/<int:number>')
+@decay_webapp.route('/<int:number>')
 def atom_number(number):
 
     search = '{}'.format(number)
@@ -87,7 +80,7 @@ def atom_number(number):
                          'atoms.element = elements.element '
                          'where protons = ? or mass = ?', (number,number), search)
 
-@app.route('/<string:element>')
+@decay_webapp.route('/<string:element>')
 def atom_element(element):
     search = '{}'.format(element)
     if(len(element)<3):
