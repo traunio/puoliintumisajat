@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<div class="container">
+<h1>Atomien puoliintuminen</h1>
+
+<p>Tarkastele eri alkuaineiden isotooppien puoliintumisaikoja ja hajoamistapoja. Kaikki sivulla esitytet tiedot pohjautuvat 2006 julkaistuun <b>ENDF/B-VII.0</b>-versioon. ENDF tulee sanoista <i>Evaluated Nuclear Data File</i> ja sitä julkaisee Yhdysvaltojen ja Kanadan <i>Cross Section Evaluation Working Group</i>-ryhmä.</p>
+<p>Tällä sivustolla esitetyt hajoamisketjut ja puoliintumisajat perustuvat ENDF-formaatista luettuihin tietoihin. Yhteensä 3775 eri isotoopin tiedot ovat saatavilla sivustolta. Mahdolliset virheet ovat todennäköisesti ENDF-formaatista tiedon muuntamisessa syntyneitä. Koska tämä sivusto on harrastepohjalta tehty, ethän käytä tietoja mihinkään kriittiseen. </p>
+
+<p>Alkuaineiden suomenkieliset nimet on otettu suomenkielisestä Wikipediasta. Suomenkielisessä Wikipediassa näyttää olevan myös jokaisesta alkuaineesta artikkeli, joka on linkitetty tulossivustolle. </p>
+
+<h2>Isotooppien hajoamisten hakeminen</h2>
+
+<p>Sivustolla on muutama eri tapa hakea isotooppeja. Puoliintumisaikoja ja hajoamistapoja voi hakea kirjoittamalla seuraavia asioita joko yläkulman etsi-kenttään tai sitten suoraan nettiselaimen osoitekenttään.</p>
+
+<ul class="list-group">
+  <li class="list-group-item">Alkuaineen nimi tai kemiallinen merkki, esim. "<a href="{{url_for('atom_element', element='cesium')}}">cesium"</a> tai "<a href="{{url_for('atom_element', element='Na')}}">Na"</a></li>
+  <li class="list-group-item">Tiettyä isotooppia, esim. "<a href="{{url_for('atom_partial', atom='N', number=16)}}">N-16</a>" tai "<a href="{{url_for('atom_full', number_a=136, number_z=55, atom='Cs')}}">55-Cs-136</a>". Väliviiva on pakollinen, esim. "N16" ei toimi</li>
+  <li class="list-group-item">Protonien määrä tai isotoopin massaluku (haku tapahtuu molemmilla), esim. "<a href="{{url_for('atom_number', number=33)}}">33</a>" tai "<a href="{{url_for('atom_number', number=101)}}">101</a>"</li>
+  <li class="list-group-item">Kaikki isotoopit massalukujen välillä, esim. "<a href="{{url_for('atom_between', number=40, number2=47)}}">40-47</a>" tai "<a href="{{url_for('atom_between', number=130, number2=133)}}">130-133</a>"
+</ul>
+
+<p>Tulossivusto on aina jaoteltu alkuaineen mukaisiin ryhmiin ja kustakin isotoopista esitetään kaikki hajoamistavat ja niiden osuudet, sekä mitkä isotoopit hajoavat kohdeisotoopiksi.</p> 
+
+<h2>Luettelu saatavilla olevat alkuaineet</h2>
+<p>Alkuainelistaus perustuu <b>ENDF/B-VII.0</b>:n mainittuihin alkuaineisiin. Ohessa kaikki alkuaineet nimen mukaisessa aakkosjärjestyksessä.</p>
+
+
+<div class="container">
+  {% for row in atoms %}
+  <div class="row">
+  {% for atom in row %}
+  <div class="col-sm">{{atom.chemical}} - <a href="{{url_for('atom_element', element=atom.name)}}">{{atom.name}}</a></div>
+  {% endfor %}
+
+  </div>
+{% endfor %}
+</div>
+
+</div>
+{% endblock %}
