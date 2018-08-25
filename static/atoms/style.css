@@ -1,0 +1,19 @@
+.limes {
+    position: relative;
+    display: inline-block;
+    margin: 0 0.2em;
+    vertical-align: middle; 
+    text-align: right;
+}
+.limes > span { 
+    display: block;
+    margin:-0.5ex auto;
+}
+.limes span.numup,
+.limes span.overdn {
+    font-size: 70%;
+}
+
+body { 
+    padding-top: 65px; 
+}

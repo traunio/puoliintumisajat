@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<main role="main" class="container">
+  <div class="container">
+
+    <h1 class="mb-4">Tulokset haulla "{{search_term}}"</h1>
+
+    {% for element in elements %}
+
+    <div class="card bg-light mb-3">
+
+      <div class="card-header bg-primary text-white">
+	<h3>
+	  {{element.element}}<span class="badge float-right"> <a class="text-white" href="https://fi.wikipedia.org/wiki/{{element.element}}">Wikipedia-sivu</a></span></h3>
+	
+
+      </div>
+
+      <div class="accordion" id="accordionElements">
+
+	{% for row in element.rows %}
+	<div class="card">
+	  <div class="card-header" id="{{row.id}}">
+	    <div class="row">
+	      <div class="col">
+		<h4 class="mb-0 align-middle">
+		  <span class="limes"><span class="numup">{{row.mass}}{{row.isomere}}</span>
+		    <span class="overdn">{{row.protons}}</span></span>{{row.atom}} - {{row.halflife |safe}}
+	      </h4>
+	    </div>
+	    {% if row.daughters or row.parents %}
+	    <div class="col">
+	      <span class="badge float-right">
+		<button class="btn btn-primary align-middle" type="button" data-toggle="collapse" data-target="#{{row.collapse}}" aria-expanded="false" aria-controls="{{row.collapse}}">Näytä hajoamiset
+              </button></span>
+	    </div>
+	    {% endif %}	
+
+	  </div>
+	</div>
+
+	<div id="{{row.collapse}}" class="collapse" aria-labelledby="{{row.id}}" data-parent="#accordionElements">
+	  <div class="card-body">
+	    {% if row.daughters or row.parents %}
+	      <table class="table table-sm table-hover">
+		<thead>
+		  <tr>
+		    <th scope="col">Isotooppi</th>
+		    <th scope="col">Hajoamistapa</th>
+		    <th scope="col">Osuus</th>
+		    <th scope="col">Lopputuote</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  {% endif %}
+		  {% for daughter in row.daughters %}
+		  <tr>
+		    <td>              <span class="limes"><span class="numup">{{row.mass}}{{row.isomere}}</span>
+			<span class="overdn">{{row.protons}}</span></span>{{row.atom}}</td>
+		    <td>{{daughter.decays}} </td>
+		    <td> {{daughter.percentage}}</td>
+		    <td><a href="{{url_for('.atom_full', number_a=daughter.mass, number_z=daughter.protons, atom=daughter.atom)}}">
+			<span class="limes"><span class="numup">{{daughter.mass}}{% if daughter.isomere %}m{% endif %}</span>
+			  <span class="overdn">{{daughter.protons}}</span></span>{{daughter.atom}}</a> -
+
+		      <a href="{{url_for('.atom_element', element=daughter.element)}}">{{daughter.element}}</a></td>
+
+		  </tr>
+
+		  {% endfor %}
+		  {% for parent in row.parents %}
+
+		  <tr>
+		    <td><a href="{{url_for('.atom_full', number_a=parent.mass, number_z=parent.protons, atom=parent.atom)}}">
+			<span class="limes"><span class="numup">{{parent.mass}}{% if parent.isomere %}m{% endif %}</span>
+			  <span class="overdn">{{parent.protons}}</span></span>{{parent.atom}}</a> -
+
+		      <a href="{{url_for('.atom_element', element=parent.element)}}">{{parent.element}}</a></td>
+
+		    <td>{{parent.decays}} </td>
+		    <td> {{parent.percentage}}</td>
+
+		    <td>              <span class="limes"><span class="numup">{{row.mass}}{{row.isomere}}</span>
+			<span class="overdn">{{row.protons}}</span></span>{{row.atom}}</td>
+
+		  </tr>
+
+		  {% endfor %}
+
+		  {% if row.daughters or row.parents %}
+
+	      	</tbody>
+	      </table>
+	    {% endif %}
+	  </div>
+	</div>
+      </div>
+
+      {% endfor %}
+    </div>
+
+
+  </div>
+  {% endfor %}
+
+
+    </div>
+
+</main>
+{% endblock %}
