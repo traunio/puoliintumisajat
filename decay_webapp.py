@@ -5,8 +5,6 @@ import sqlite3
 
 DATABASE = 'puoliintumisajat/static/atoms.db'
 
-print(__name__)
-
 decay_webapp = Blueprint('decay_webapp', __name__, template_folder='templates/atoms',
                          static_folder='static/atoms')
 
