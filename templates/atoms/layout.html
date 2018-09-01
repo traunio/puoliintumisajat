@@ -42,12 +42,12 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
       <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="/">Kaikki alkuaineet<span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{{url_for('.index')}}">Kaikki alkuaineet<span class="sr-only">(current)</span></a>
           </li>
       </ul>
       <!--        <form class="form-inline my-2 my-lg-0 float-right"> -->
       <ul class="nav navbar-nav navbar-right">
-      <div class="input-group my-2 my-lg-0">
+      <div class="input-group my-2 my-sm-0">
           <input class="form-control mr-sm-2" type="text" placeholder="Alkuaine/Isotooppi" aria-label="Search" id="find_terms">
           <button class="btn btn-outline-primary my-2 my-sm-0" type="button" id="button"find>Etsi</button>
       </div>
