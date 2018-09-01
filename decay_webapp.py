@@ -15,14 +15,6 @@ def get_db():
         db = g._database = sqlite3.connect(DATABASE)
     return db
 
-
-@decay_webapp.teardown_appcontext
-def close_connection(exception=None):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
-
-
 @decay_webapp.route('/')
 @decay_webapp.route('/index.html')
 def index():
